@@ -1,0 +1,108 @@
+﻿@using Microsoft.AspNet.Identity
+@model Musicly.Core.ViewModel.UserProfileViewModel
+
+@{
+    ViewBag.Title = Model.User.Name;
+}
+<div class="gg-pf-container col-md-10 col-md-offset-1">
+    <div class="gg-pf-cover">
+
+    </div>
+    <div class="gg-dp-container">
+        <a href="#" class="thumbnail col-md-3">
+            <img src="@Url.Action("Avatar", "User", new {id = Model.User.Id})" class="img-responsive"/>
+        </a>
+    </div>
+    <div class="gg-dp-head">
+        <h2 class="dp-user-name">@Model.User.Name</h2>
+        <p class="dp-user-descripton">
+            @Model.User.About
+        </p>
+        <p class="dp-user-following">
+            <span class="label label-info">@Model.User.Followers.Count</span> Followers 
+            @if (User.Identity.IsAuthenticated)
+            {
+                if (Model.IsFollower)
+                {
+                    <text>|</text>
+                    <a href="#" class="btn btn-primary btn-sm js-toggle-following btn-following-link" data-artist-id=@Model.User.Id>Following</a>
+                }
+                else if (Model.User.Id != User.Identity.GetUserId())
+                {
+                    <text>|</text>
+                    <a href="#" class="btn btn-default btn-sm js-toggle-following btn-following-link" data-artist-id=@Model.User.Id>Follow</a>
+                }
+            }
+        </p>
+    </div>
+    @Html.Partial("_GigListView", Model.GigListViewModel)
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(function() {
+            GigsController.attachEventsOnDocumentLoad();
+
+            var fail = function() {
+                alert("Something went wrong");
+            }
+
+            $("#allGigs").on("click", ".btn-toggle-attendance[value='Going?']", function(e) {
+                var currentButton = $(this);
+                var gigId = currentButton.attr("data-newGig-id");
+                $.post("/api/UserAttendances/AddAttendance", { GigId: gigId })
+                    .done(function() {
+                        currentButton.removeClass("btn-default").addClass("btn-primary").prop('value', 'Going');
+                        currentButton.mouseover(function() {
+                            $(this).prop('value', 'Cancel');
+                        }).mouseleave(function() {
+                            $(this).prop('value', 'Going');
+                        });
+                    })
+                    .fail(fail);
+            });
+
+            $("#allGigs").on("click", ".btn-toggle-attendance[value='Cancel']", function(e) {
+                var currentButton = $(e.target);
+                $.post("/api/UserAttendances/RemoveAttendance", { GigId: currentButton.attr("data-newGig-id") })
+                    .done(function() {
+                        currentButton.prop('value', 'Going?').removeClass("btn-primary").addClass("btn-default");
+                        currentButton.off("mouseleave").off("mouseover");
+                    })
+                    .fail(fail);
+            });
+
+            $(".js-toggle-following").on('click', function (e) {
+                e.preventDefault();
+                var currentButton = $(e.target);
+                if (currentButton.text() === "Unfollow") {
+                    $.post("/api/UserFollowings/Unfollow", { followeeId: currentButton.attr("data-artist-id") })
+                        .done(function() {
+                            currentButton.text('Follow');
+                            currentButton.removeClass('btn-primary').addClass("btn-default");
+                            currentButton.off("mouseover").off("mouseleave");
+                        })
+                        .fail(function() {
+                            alert("Something went wrong");
+                        });
+                } else if (currentButton.text() === "Follow") {
+                    $.post("/api/UserFollowings/Follow", { followeeId: currentButton.attr("data-artist-id") })
+                        .done(function() {
+                            currentButton.text('Following');
+                            currentButton.removeClass('btn-default').addClass("btn-primary");
+                            currentButton.mouseover(function() {
+                                $(this).text('Unfollow');
+                            }).mouseleave(function() {
+                                $(this).text('Following');
+                            });
+                        }).fail(function() {
+                            alert("Something went wrong");
+                        });
+                }
+            });
+
+        });
+
+    </script>
+}

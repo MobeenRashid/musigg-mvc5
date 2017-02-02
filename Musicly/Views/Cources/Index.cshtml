@@ -1,0 +1,55 @@
+﻿@{
+    ViewBag.Title = "Cources";
+}
+
+<h2>Cources</h2>
+
+<div id="player-container" class="dtm-player-container col-lg-8 col-sm-10 col-md-8 col-xs-12 col-md-offset-2 col-lg-offset-2 col-sm-offset-1">
+    <div id="mediaContainer" class="dtm-media-container">
+        <button id="btn-start" class="dtm-start-button btn material-icons">
+            play_circle_filled
+        </button>
+        <p class="dtm-video-duration display-non"></p>
+        <video id="video" class="dtm-video-element" preload="auto" poster="http://www.gruntify.com/file/2016/05/Gruntify-BizSpark.png">
+            <source src="http://localhost:26058/api/sample/mp4/MicrosoftBizSparkWorksWithStartups" type="video/mp4"/>
+        </video>
+        
+    </div>
+    <div class="dtm-bottom-controls display-non">
+        <div class="dtm-left-controls">
+            <button id="playPause" class="btn btn-chrome-action material-icons">
+                play_arrow
+            </button>
+            <button id="rewind" class="btn btn-chrome-action material-icons">replay_10</button>
+        </div>
+        <div class="dtm-middle-controls">
+            <div class="dtm-current-time">
+                <span id="currentTime" style="margin: 3px">0:00</span>
+            </div>
+            <div id="rail" class="progress dtm-progress-rail">
+                <div id="scrubber" class="progress-bar dtm-scrubber" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                </div>
+                <div id="dtm-progress" class="progress-bar dtm-load-progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                </div>
+            </div>
+            <div class="dtm-total-time">
+                <span id="totalTime" style="margin: 3px">0:00</span>
+            </div>
+        </div>
+
+        <div class="dtm-right-controls display-non">
+            <div class="dtm-volume-container">
+                <div class="volume-rail-container">
+                    <div id="volumeRail" class="dtm-volume-rail">
+                        <div id="volumeScrubber" class="dtm-volume-scrubber"></div>
+                    </div>
+                </div>
+                <button id="volume" class="btn btn-volume-action material-icons">volume_up</button>
+            </div>
+            <button class="btn btn-chrome-action btn-video-expand material-icons">fullscreen</button>
+        </div>
+    </div>
+</div>
+@section scripts{
+  @Scripts.Render("~/Scripts/Media");
+}

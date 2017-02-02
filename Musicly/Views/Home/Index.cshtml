@@ -1,0 +1,44 @@
+﻿@using Microsoft.AspNet.Identity
+@model Musicly.Core.ViewModel.GigListViewModel
+@{
+    ViewBag.Title = "Home Page";
+}
+@Html.Partial("_GigListView",Model)
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            //attendances script
+            GigsController.attachEventsOnDocumentLoad();
+            
+            var fail = function () {
+                alert("Something went wrong");
+            }
+
+            $("#allGigs").on("click", ".btn-toggle-attendance[value='Going?']", function (e) {
+                var currentButton = $(this);
+                var gigId = currentButton.attr("data-newGig-id");
+                $.post("/api/UserAttendances/AddAttendance", { GigId: gigId })
+                       .done(function () {
+                           currentButton.removeClass("btn-default").addClass("btn-primary").prop('value', 'Going');
+                           currentButton.mouseover(function () {
+                               $(this).prop('value', 'Cancel');
+                           }).mouseleave(function () {
+                               $(this).prop('value', 'Going');
+                           });
+                       })
+                       .fail(fail);
+            });
+
+            $("#allGigs").on("click", ".btn-toggle-attendance[value='Cancel']", function (e) {
+                var currentButton = $(e.target);
+                $.post("/api/UserAttendances/RemoveAttendance", { GigId: currentButton.attr("data-newGig-id") })
+                    .done(function () {
+                        currentButton.prop('value', 'Going?').removeClass("btn-primary").addClass("btn-default");
+                        currentButton.off("mouseleave").off("mouseover");
+                    })
+                    .fail(fail);
+            });
+
+        });
+    </script>
+}

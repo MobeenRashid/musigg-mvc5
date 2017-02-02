@@ -1,0 +1,70 @@
+﻿@model IEnumerable<Musicly.Core.Models.ApplicationUser>
+
+@{
+    ViewBag.Title = "Followings";
+}
+
+<div class="row col-md-10 col-md-offset-1 gg-user-followees">
+    @foreach (var followee in Model)
+    {
+        <div class="col-md-3 col-sm-5 user-followee-item">
+            <a class="thumbnail followee-dp"><img src="@Url.Action("Avatar", "User", new {id = followee.Id})"/></a>
+            <h3 class="followee-name">
+                @Html.ActionLink(followee.Name, "UserProfile", "User", new {id = followee.Id}, new {@class = "btn-link"})
+            </h3>
+            <p class="followee-desciption">
+                @followee.About.Substring(0, followee.About.Length > 50 ? 50 : followee.About.Length) ...
+            </p>
+            <div class="followee-following-action">
+                <a href="#" class="btn btn-primary btn-sm js-toggle-following btn-following-link" data-artist-id=@followee.Id>Following</a>
+            </div>
+        </div>
+
+    }
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            var followingButton = $(".js-toggle-following");
+            if (followingButton.text() === "Following") {
+                followingButton.mouseover(function () {
+                    $(this).text('Unfollow');
+                }).mouseleave(function () {
+                    $(this).text('Following');
+                });
+            }
+
+            $(".js-toggle-following").on('click', function (e) {
+                e.preventDefault();
+                var currentButton = $(e.target);
+                if (currentButton.text() === "Unfollow") {
+                    $.post("/api/UserFollowings/Unfollow", { followeeId: currentButton.attr("data-artist-id") })
+                        .done(function () {
+                            currentButton.text('Follow');
+                            currentButton.removeClass('btn-primary').addClass("btn-default");
+                            currentButton.off("mouseover").off("mouseleave");
+                        })
+                        .fail(function () {
+                            alert("Something went wrong");
+                        });
+                } else if (currentButton.text() === "Follow") {
+                    $.post("/api/UserFollowings/Follow", { followeeId: currentButton.attr("data-artist-id") })
+                        .done(function () {
+                            currentButton.text('Following');
+                            currentButton.removeClass('btn-default').addClass("btn-primary");
+                            currentButton.mouseover(function () {
+                                $(this).text('Unfollow');
+                            }).mouseleave(function () {
+                                $(this).text('Following');
+                            });
+                        }).fail(function () {
+                            alert("Something went wrong");
+                        });
+                }
+            });
+
+        });
+
+    </script>
+}

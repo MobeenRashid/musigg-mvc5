@@ -1,0 +1,91 @@
+﻿@model Musicly.Core.ViewModel.GigListViewModel
+@{
+    ViewBag.Title = "Attending";
+}
+
+<h2 style="text-align: center">Gigs I'm Attending</h2>
+@Html.Partial("_GigListView",Model)
+@section scripts{
+<script type="text/javascript">
+        $(function() {
+
+            //attendances script
+            var goingButton = $(".btn-toggle-attendance[value='Going?']");
+            var cancelButton = $(".btn-toggle-attendance[value='Going']");
+
+            cancelButton.mouseover(function() {
+                $(this).prop('value', 'Cancel');
+            }).mouseleave(function() {
+                $(this).prop('value', 'Going');
+            });
+
+            goingButton.click(function(e) {
+                var currentButton = $(e.target);
+                $.post("/api/attendances/addattendance", { gigId: currentButton.attr("data-newGig-id") }).done(function() {
+                    currentButton.removeClass("btn-default").addClass("btn-info").prop('value', 'Going');
+                    currentButton.mouseover(function() {
+                        $(this).prop('value', 'Cancel');
+                    }).mouseleave(function() {
+                        $(this).prop('value', 'Going');
+                    });
+                }).fail(function() {
+                    alert("Something went wrong");
+                });
+            });
+
+
+            cancelButton.click(function(e) {
+
+                var currentButton = $(e.target);
+                $.post("/api/attendances/removeattendance", { gigId: currentButton.attr("data-newGig-id") })
+                    .done(function() {
+                        currentButton.prop('value', 'Going?').removeClass("btn-info").addClass("btn-default");
+                        currentButton.off("mouseleave").off("mouseover");
+                    })
+                    .fail(function() {
+                        alert("Something went wrong");
+                    });
+            });
+
+
+
+        //following script
+
+        var unfollowButton = $(".js-toggle-following[value='Following']");
+        var followButton = $(".js-toggle-following[value='Follow']");
+
+
+        unfollowButton.mouseover(function() {
+            $(this).prop('value','Unfollow');
+        }).mouseleave(function() {
+            $(this).prop('value','Following');
+        });
+
+
+        unfollowButton.click(function (e) {
+            var currentButton = $(e.target);
+            $.post("/api/followings/unfollow", { followeeId: currentButton.attr("data-artist-id") })
+                .done(function() {
+                    currentButton.prop('value','Follow');
+                    currentButton.off("mouseover").off("mouseleave");
+                })
+                .fail(function() { alert("Something went wrong"); });
+        });
+
+        followButton.click(function (e) {
+            var cuurrentButton = $(e.target);
+            $.post("/api/followings/follow", { followeeId: cuurrentButton.attr("data-artist-id") })
+                          .done(function() {
+                              cuurrentButton.prop('value','Following');
+                              cuurrentButton.mouseover(function () {
+                                  $(this).prop('value','Unfollow');
+                              }).mouseleave(function() {
+                                  $(this).prop('value','Following');
+                              });
+                          }).fail(function() {
+                              alert("Something went wrong");
+                          });
+        });
+      });
+</script>
+}

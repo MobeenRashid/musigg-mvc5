@@ -1,0 +1,91 @@
+﻿@model IEnumerable<Musicly.Core.Models.Gig>
+@{
+    ViewBag.Title = "Mine";
+}
+
+<h2 style="text-align: center">My Upcoming Gigs</h2>
+<ul class="gigs col-md-6 col-sm-8 col-xs-10 col-md-offset-3 col-sm-offset-2">
+    @foreach (var gig in Model)
+    {
+        <li class="gig">
+            <div class="date">
+                <div class="month">
+                    @gig.DateTime.ToString("MMM")
+                </div>
+                <div class="day">
+                    @gig.DateTime.ToString("dd")
+                </div>
+            </div>
+
+            <div class="detail">
+                @if (gig.IsCancel)
+                {
+                    <span class="label label-warning pull-right" style="padding: 10px 10px">Canceled</span>
+                }
+                <h2>
+                    @gig.Venue
+                </h2>
+
+                <span class="genre">
+                    <b>Genre:</b> @gig.Genre.Name
+                </span>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <div class="actions">
+                        <a href=@Url.Action("Edit", "Gigs", new {id = gig.Id})>Edit</a>
+                        |
+                        @if (!gig.IsCancel)
+                        {
+                            <a href="#" class="js-gig-cancel" data-newGig-id=@gig.Id>Cancel</a>
+                        }
+                    </div>
+
+                }
+            </div>
+        </li>
+    }
+</ul>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $(".js-gig-cancel").click(function (e) {
+                var link = $(e.target);
+                bootbox.dialog({
+                    message: "Are you sure you want to cancel the Gig?",
+                    title: "Confirm",
+                    buttons: {
+                        no: {
+                            label: "no",
+                            className: "btn-default",
+                            callback: function () {
+                                bootbox.hideAll();
+                            }
+                        },
+                        yes: {
+                            label: "yes",
+                            className: "btn-danger",
+                            callback: function () {
+                                $.ajax({
+                                    url: "/api/gigs/" + link.attr("data-newGig-id"),
+                                    method: "DELETE"
+                                })
+                                  .done(function () {
+                                      link.parents("li").fadeOut(function () {
+                                          $(this).remove();
+                                      });
+                                  })
+                                  .fail(function (e) {
+                                      alert(e.toLocaleString());
+                                  });
+
+                            }
+                        }
+                    }
+                });
+
+            });
+        });
+    </script>
+}
+

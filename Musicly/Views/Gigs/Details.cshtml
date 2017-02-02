@@ -1,0 +1,158 @@
+﻿@using Microsoft.AspNet.Identity
+@model Musicly.Core.ViewModel.GigDetailsViewModel
+
+@{
+    ViewBag.Title = "Gig Details";
+}
+<ul id="allGigs" class="gigs col-md-8 col-sm-10 col-xs-12 col-md-offset-2 col-sm-offset-1" style="margin-top: 50px">
+
+    <li class="gig">
+        <div class="detail">
+            <div class="artist">
+                <img src="@Url.Action("Avatar", "User", new {id = Model.Gig.ArtistId})" alt="Avatar" class="gg-user-avatar" />
+                <div class="artist-name">
+                    @Html.ActionLink(Model.ArtistName, "UserProfile", "User", new { id = Model.Gig.ArtistId }, null)
+                    <span class="genre label label-info">
+                        @Model.Gig.Genre.Name
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="date">
+            <div class="month">
+                @Model.Gig.DateTime.ToString("MMM")
+            </div>
+            <div class="day">
+                @Model.Gig.DateTime.ToString("d ")
+            </div>
+        </div>
+        <div class="description">
+            <div class="following-action">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    if (Model.IsFollower)
+                    {
+                        <a href="#" class="btn-link js-toggle-following btn-following-link" data-artist-id=@Model.Gig.ArtistId>Following</a>
+                    }
+                    else if (Model.Gig.ArtistId != User.Identity.GetUserId())
+                    {
+                        <a href="#" class="btn-link js-toggle-following btn-following-link" data-artist-id=@Model.Gig.ArtistId>Follow</a>
+                    }
+                }
+            </div>
+            <p>
+                @Model.Gig.Description
+            </p>
+        </div>
+        <div class="gig-action">
+            @if (User.Identity.IsAuthenticated && !Model.Gig.IsCancel)
+            {
+                if (Model.Gig.ArtistId != User.Identity.GetUserId())
+                {
+                    <input type="button" value="@(Model.IsGoing ? "Going" : "Going?")" data-newGig-id="@Model.Gig.Id" class="btn @(Model.IsGoing ? "btn-primary" : "btn-default") btn-sm pull-right btn-going btn-toggle-attendance" />
+                }
+            }
+            else if (Model.Gig.IsCancel)
+            {
+                <span class="label label-warning pull-right" style="padding: 10px 10px">Canceled</span>
+            }
+        </div>
+    </li>
+</ul>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(function() {
+            GigsController.attachEventsOnDocumentLoad();
+
+            var fail = function() {
+                alert("Something went wrong");
+            }
+
+            $("#allGigs").on("click", ".btn-toggle-attendance[value='Going?']", function(e) {
+                var currentButton = $(this);
+                var gigId = currentButton.attr("data-newGig-id");
+                $.post("/api/UserAttendances/AddAttendance", { GigId: gigId })
+                    .done(function() {
+                        currentButton.removeClass("btn-default").addClass("btn-primary").prop('value', 'Going');
+                        currentButton.mouseover(function() {
+                            $(this).prop('value', 'Cancel');
+                        }).mouseleave(function() {
+                            $(this).prop('value', 'Going');
+                        });
+                    })
+                    .fail(fail);
+            });
+
+            $("#allGigs").on("click", ".btn-toggle-attendance[value='Cancel']", function(e) {
+                var currentButton = $(e.target);
+                $.post("/api/UserAttendances/RemoveAttendance", { GigId: currentButton.attr("data-newGig-id") })
+                    .done(function() {
+                        currentButton.prop('value', 'Going?').removeClass("btn-primary").addClass("btn-default");
+                        currentButton.off("mouseleave").off("mouseover");
+                    })
+                    .fail(fail);
+            });
+
+            $("#allGigs").on('click', '.js-toggle-following', function(e) {
+                var currentButton = $(e.target);
+                if (currentButton.text() === "Unfollow") {
+                    $.post("/api/UserFollowings/Unfollow", { followeeId: currentButton.attr("data-artist-id") })
+                        .done(function() {
+                            currentButton.text('Follow');
+                            currentButton.off("mouseover").off("mouseleave");
+                        })
+                        .fail(function() {
+                            alert("Something went wrong");
+                        });
+                } else if (currentButton.text() === "Follow") {
+                    $.post("/api/UserFollowings/Follow", { followeeId: currentButton.attr("data-artist-id") })
+                        .done(function() {
+                            currentButton.text('Following');
+                            currentButton.mouseover(function() {
+                                $(this).text('Unfollow');
+                            }).mouseleave(function() {
+                                $(this).text('Following');
+                            });
+                        }).fail(function() {
+                            alert("Something went wrong");
+                        });
+                }
+            });
+
+        });
+
+        //$(function() {
+
+
+        //    followingButton.click(function() {
+        //        var currentValue = $(this).attr('value');
+        //        if (currentValue === "Unfollow") {
+        //            $.post("/api/followings/unfollow", { followeeId: followingButton.attr("data-artist-id") })
+        //                .done(function() {
+        //                    followingButton.prop('value', 'Follow').removeClass("btn-info")
+        //                        .addClass("btn-default");
+        //                    followingButton.off("mouseover").off("mouseleave");
+        //                })
+        //                .fail(function() { alert("Something went wrong"); });
+        //        } else if (currentValue === "Follow") {
+        //            $.post("/api/followings/follow", { followeeId: followingButton.attr("data-artist-id") })
+        //                .done(function() {
+        //                    followingButton.prop('value', 'Following')
+        //                        .removeClass("btn-default")
+        //                        .addClass("btn-info");
+        //                    followingButton.mouseover(function () {
+        //                        $(this).prop('value', 'Unfollow');
+        //                    }).mouseleave(function () {
+        //                        $(this).prop('value', 'Following');
+        //                    });
+        //                }).fail(function() {
+        //                    alert("Something went wrong");
+        //                });
+        //        }
+
+        //    });
+        //});
+    </script>
+}

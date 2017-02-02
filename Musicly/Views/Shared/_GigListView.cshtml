@@ -1,0 +1,58 @@
+﻿@using System.Web.Razor.Parser
+@using Microsoft.AspNet.Identity
+@model Musicly.Core.ViewModel.GigListViewModel
+
+@if (Model.UpcomingGigs.Count() != 0)
+{
+    <ul id="allGigs" class="gigs col-md-6 col-sm-10 col-xs-12 col-md-offset-3 col-sm-offset-1">
+        @foreach (var gig in Model.UpcomingGigs)
+        {
+            <li class="gig">
+                <div class="detail">
+                    <div class="artist">
+                        <img src="@Url.Action("Avatar", "User", new {id = gig.ArtistId})" alt="Avatar" class="gg-user-avatar" />
+                        <div class="artist-name">
+                            @Html.ActionLink(gig.Artist.Name, "Details", "Gigs",new {id=gig.Id},null)
+                            <span class="genre label label-info">
+                                @gig.Genre.Name
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="date">
+                    <div class="month">
+                        @gig.DateTime.ToString("MMM")
+                    </div>
+                    <div class="day">
+                        @gig.DateTime.ToString("d ")
+                    </div>
+                </div>
+                <p class="description">
+                    @gig.Description
+                </p>
+                <div class="gig-action">
+                    @if (Model.IsUserAuthenticated && !gig.IsCancel)
+                    {
+                        if (gig.ArtistId != User.Identity.GetUserId())
+                        {
+                            <input type="button" value="@(Model.Attendances.Contains(gig.Id) ? "Going" : "Going?")" data-newGig-id="@gig.Id" class="btn @(Model.Attendances.Contains(gig.Id) ? "btn-primary" : "btn-default") btn-sm pull-right btn-going btn-toggle-attendance" />
+                        }
+                    }
+                    else if (gig.IsCancel)
+                    {
+                        <span class="label label-warning pull-right" style="padding: 10px 10px">Canceled</span>
+                    }
+                </div>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p class="alert alert-info text-center">No gigs have been created yet.</p>
+}
+
+
+
+
+
