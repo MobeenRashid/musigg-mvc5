@@ -71,6 +71,7 @@ namespace Musicly.Controllers
 
         public async Task<ActionResult> UserProfile(string id)
         {
+            
             var user = await UserManager.FindByIdAsync(id);
             if (user == null)
                 return HttpNotFound();
@@ -83,6 +84,7 @@ namespace Musicly.Controllers
             var userViewModel = new UserProfileViewModel
             {
                 User = user,
+                Followings=_unitOfWork.Artists.GetCurrentUserFollowers(),
                 IsFollower = _unitOfWork.Followings.IsFollower(User.Identity.GetUserId(), user.Id),
                 GigListViewModel = gigListViewModel
             };

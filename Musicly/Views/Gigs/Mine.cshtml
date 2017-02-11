@@ -8,6 +8,10 @@
     @foreach (var gig in Model)
     {
         <li class="gig">
+            @if (gig.IsCancel)
+                {
+                <p class="alert alert-warning" style="clear: both;text-align: center">This Mig is Canceled</p>
+            }
             <div class="date">
                 <div class="month">
                     @gig.DateTime.ToString("MMM")
@@ -18,10 +22,6 @@
             </div>
 
             <div class="detail">
-                @if (gig.IsCancel)
-                {
-                    <span class="label label-warning pull-right" style="padding: 10px 10px">Canceled</span>
-                }
                 <h2>
                     @gig.Venue
                 </h2>

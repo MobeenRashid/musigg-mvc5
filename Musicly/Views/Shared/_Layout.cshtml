@@ -25,7 +25,7 @@
                 <button type="button" data-dismiss="modal" aria-label="close" class="close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title">Add new MIC</h4>
+                <h4 class="modal-title">Add new Mig</h4>
             </div>
             <div class="modal-body">
                 @Html.Partial("_GigFormView", (GigFormViewModel) ViewBag.GigFormViewModal)
@@ -43,14 +43,17 @@
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                Menu
             </button>
-            @Html.ActionLink("Musicly", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            @Html.ActionLink("Musigg", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
         </div>
         <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                @*<li>@Html.ActionLink("Add a Gig", "Create", "Gigs")</li>*@
-                <li><a href="#" data-toggle="modal" data-target="#GigCreateModal" class="btn-add-gig"><i class="glyphicon glyphicon-plus"></i> MIC</a></li>
-                <li>@Html.ActionLink("Mine MICs", "Mine", "Gigs")</li>
-            </ul>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <ul class="nav navbar-nav">
+                    @*<li>@Html.ActionLink("Add a Gig", "Create", "Gigs")</li>*@
+                    <li><a href="#" data-toggle="modal" data-target="#GigCreateModal" class="btn-add-gig"><i class="glyphicon glyphicon-plus"></i> Mig</a></li>
+                    <li>@Html.ActionLink("Mine", "Mine", "Gigs")</li>
+                </ul>
+            }
             <div class="nav navbar-nav navbar-form">
                 @using (Html.BeginForm("Search", "Gigs", FormMethod.Post, new {@class = "pull-right"}))
                 {
@@ -64,7 +67,7 @@
                     </div>
                 }
             </div>
-                @Html.Partial("_LoginPartial")
+            @Html.Partial("_LoginPartial")
         </div>
     </div>
 </div>

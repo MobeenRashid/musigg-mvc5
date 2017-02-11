@@ -60,7 +60,7 @@ textarea {
 }
 
 .field-validation-error {
-    color: #B71C1C;
+    color: #D32F2F;
     font-weight: bold;
 }
 
@@ -73,8 +73,8 @@ textarea {
 }
 
 .navbar {
-    background-color: #B71C1C;
-    border-color: #B71C1C;
+    background-color: #D32F2F;
+    border-color: #D32F2F;
     /*box-shadow: 0 2px 2px 0 #d1382d;*/
     max-height: 50px;
 }
@@ -98,7 +98,8 @@ textarea {
         color: #fff;
     }
 
-.navbar-nav > li > a {
+.navbar-nav li {
+    position: relative;
     color: #fff;
     transition: background-color 0.2s;
     -webkit-transition-timing-function: ease-in-out;
@@ -107,22 +108,30 @@ textarea {
     -o-transition-timing-function: ease-in-out;
     transition-timing-function: ease-in-out;
     height: 50px;
-    padding: 0 10px;
     text-align: center;
-    line-height: 50px;
+    /*display: table-cell;
+    vertical-align: middle;*/
 }
 
-    .navbar-nav > li > a:hover {
-        background-color: #D32F2F;
+    .navbar-nav > li > a {
+        padding: 0 10px;
+        height: 50px;
+        color: white;
+        line-height: 50px;
+        color: white;
     }
 
-    .navbar-nav > li > a:focus {
-        background-color: #D32F2F;
-    }
+        .navbar-nav li a:hover {
+            background-color: #E53935;
+        }
 
-    .navbar-nav > li > a:after {
-        background-color: #ce362b;
-    }
+        .navbar-nav li a:focus {
+            background-color: #e84c49;
+        }
+
+        .navbar-nav li a:after {
+            background-color: #f13224;
+        }
 
 .navbar-nav > li.notifications > a {
     line-height: 0;
@@ -196,6 +205,11 @@ h6,
 
 
 .dropdown-menu {
+    width: 200px;
+    padding: 0;
+    border-width: 0 2px 2px 2px;
+    -ms-border-radius: 2px;
+    border-radius: 2px;
     -webkit-box-shadow: none;
     -ms-box-shadow: none;
     box-shadow: none;
@@ -206,34 +220,27 @@ h6,
     border-bottom-color: #fff;
 }
 
-.dropdown-menu {
-    width: 200px;
-    padding: 0;
-    border-width: 0 2px 2px 2px;
-    -ms-border-radius: 2px;
-    border-radius: 2px;
+
+.dropdown-menu > li {
+    text-align: center;
+    height: 35px;
+    line-height: 200px;
 }
 
-    .dropdown-menu > li {
-        text-align: center;
-        height: 35px;
-        line-height: 200px;
+    .dropdown-menu > li > a {
+        height: 100%;
+        vertical-align: middle;
+        line-height: 50px;
     }
 
-        .dropdown-menu > li > a {
-            height: 100%;
-            vertical-align: middle;
-            line-height: 50px;
+        .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
+            background-color: #E0E0E0;
+            color: black;
         }
 
-            .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
-                background-color: #E0E0E0;
-                color: black;
-            }
-
-    .dropdown-menu .divider {
-        margin: 0;
-    }
+.dropdown-menu .divider {
+    margin: 0;
+}
 
 .navbar-brand {
     font-weight: 700;
@@ -1108,7 +1115,7 @@ h6,
 }
 
 .input-validation-error {
-    border-color: #B71C1C;
+    border-color: #D32F2F;
 }
 
 .gg-pf-cover {
@@ -1143,7 +1150,7 @@ h6,
     }
 
         .gg-dp-container a.thumbnail:hover {
-            border-color: #B71C1C;
+            border-color: #D32F2F;
         }
 
 .gg-dp-head {
@@ -1228,9 +1235,11 @@ h6,
         -o-transform: translateX(-50%);
         transform: translateX(-50%);
     }
-     .user-followee-item .thumbnail > img {
-         max-height: 80px;
-     }
+
+        .user-followee-item .thumbnail > img {
+            max-height: 80px;
+        }
+
     .user-followee-item .followee-name {
         margin: 5px 0 5px 0;
     }
@@ -1259,11 +1268,14 @@ h6,
         background-color: transparent;
         color: #2196f3;
     }
+
 .navbar-header .navbar-brand {
     font-size: 20px;
     font-weight: bold;
 }
-.nav .navbar-nav li a {
 
-    font-size: 15px;
+.navbar-right .dropdown .dropdown-toggle {
+    line-height: 0;
+    display: table-cell;
+    vertical-align: middle;
 }

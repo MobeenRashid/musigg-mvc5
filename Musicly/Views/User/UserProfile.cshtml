@@ -19,7 +19,7 @@
             @Model.User.About
         </p>
         <p class="dp-user-following">
-            <span class="label label-info">@Model.User.Followers.Count</span> Followers 
+            <span class="label label-info">@Model.Followings.Count</span> Followers 
             @if (User.Identity.IsAuthenticated)
             {
                 if (Model.IsFollower)
