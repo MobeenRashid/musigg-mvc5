@@ -7,7 +7,7 @@ namespace Musicly.Core.Models
     {
         [ForeignKey("GigId")]
         public Gig Gig { get; set; }
-
+      
         [ForeignKey("ArtistId")]
         public ApplicationUser Artist { get; set; }
 

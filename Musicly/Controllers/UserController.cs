@@ -1,16 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using Musicly.Core.Models;
+using Musicly.Core.Repositories;
+using Musicly.Core.ViewModel;
+using Musicly.Infrastructure;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using Musicly.Core.Models;
-using Musicly.Core.Repositories;
-using Musicly.Core.ViewModel;
-using Musicly.Infrastructure;
 
 namespace Musicly.Controllers
 {
