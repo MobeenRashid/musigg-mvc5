@@ -51,7 +51,7 @@ namespace Musicly.Controllers
 
             gig.Modify(viewModel.GetDateTime(), viewModel.Venue, viewModel.Genre,viewModel.Description);
 
-            _unitOfWork.Complete();
+            _unitOfWork.SaveWork();
             return RedirectToAction("Mine", "Gigs");
         }
 
@@ -134,7 +134,7 @@ namespace Musicly.Controllers
             };
 
             _unitOfWork.Gigs.AddGig(gig);
-            _unitOfWork.Complete();
+            _unitOfWork.SaveWork();
             return RedirectToAction("Mine", "Gigs");
         }
 

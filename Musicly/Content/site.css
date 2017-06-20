@@ -100,7 +100,7 @@ textarea {
 
 .navbar-nav li {
     position: relative;
-    color: #fff;
+    color: #6b6b6b;
     transition: background-color 0.2s;
     -webkit-transition-timing-function: ease-in-out;
     -moz-transition-timing-function: ease-in-out;

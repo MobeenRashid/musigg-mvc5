@@ -17,74 +17,78 @@
     }
 </head>
 <body>
-@*Model Popup Code*@
-<div id="GigCreateModal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" data-dismiss="modal" aria-label="close" class="close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title">Add new Mig</h4>
-            </div>
-            <div class="modal-body">
-                @Html.Partial("_GigFormView", (GigFormViewModel) ViewBag.GigFormViewModal)
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button class="btn btn-primary btn-create-gig">Create</button>
+    @*Model Popup Code*@
+    <div id="GigCreateModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" data-dismiss="modal" aria-label="close" class="close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">Add new Mig</h4>
+                </div>
+                <div class="modal-body">
+                    @Html.Partial("_GigFormView", (GigFormViewModel)ViewBag.GigFormViewModal)
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary btn-create-gig">Create</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="navbar navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-               Menu
-            </button>
-            @Html.ActionLink("Musigg", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-        </div>
-        <div class="navbar-collapse collapse">
-            @if (User.Identity.IsAuthenticated)
+    <div class="navbar navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    Menu
+                </button>
+                @Html.ActionLink("Musigg", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                @if (User.Identity.IsAuthenticated)
             {
-                <ul class="nav navbar-nav">
-                    @*<li>@Html.ActionLink("Add a Gig", "Create", "Gigs")</li>*@
-                    <li><a href="#" data-toggle="modal" data-target="#GigCreateModal" class="btn-add-gig"><i class="glyphicon glyphicon-plus"></i> Mig</a></li>
-                    <li>@Html.ActionLink("Mine", "Mine", "Gigs")</li>
-                </ul>
-            }
-            <div class="nav navbar-nav navbar-form">
-                @using (Html.BeginForm("Search", "Gigs", FormMethod.Post, new {@class = "pull-right"}))
-                {
-                    <div class="form-group">
-                        <div id="searchGigs" class="input-group">
-                            <span class="input-group-addon">
+                    <ul class="nav navbar-nav">
+                        @*<li>@Html.ActionLink("Add a Gig", "Create", "Gigs")</li>*@
+                        <li><a href="#" data-toggle="modal" data-target="#GigCreateModal" class="btn-add-gig"><i class="glyphicon glyphicon-plus"></i> Mig</a></li>
+                        <li>@Html.ActionLink("Mine", "Mine", "Gigs")</li>
+                    </ul>
+                }
+                <div class="nav navbar-nav navbar-form">
+                    @using (Html.BeginForm("Search", "Gigs", FormMethod.Post, new { @class = "pull-right" }))
+                    {
+                        <div class="form-group">
+                            <div id="searchGigs" class="input-group">
+                                <span class="input-group-addon">
                                     <i class="glyphicon glyphicon-search"></i>
                                 </span>
-                            @Html.TextBox("SearchTerm", null, new {@class = "form-control", placeholder = "Search by artist, venue.."})
+                                @Html.TextBox("SearchTerm", null, new { @class = "form-control", placeholder = "Search by artist, venue.." })
+                            </div>
                         </div>
-                    </div>
-                }
+                    }
+                </div>
+                @Html.Partial("_LoginPartial")
             </div>
-            @Html.Partial("_LoginPartial")
         </div>
     </div>
-</div>
-<div class="body-content">
-    @RenderBody()
-    <hr/>
-</div>
-@Scripts.Render("~/Scripts/app")
-@Scripts.Render("~/Scripts/lib")
-@RenderSection("scripts", required: false)
-<script type="text/x-template" id="notifications-template">
+    <div class="body-content">
+        @RenderBody()
+        <hr />
+    </div>
+    @Scripts.Render("~/Scripts/app")
+    @Scripts.Render("~/Scripts/lib")
+    @RenderSection("scripts", required: false)
+    <script type="text/x-template" id="notifications-template">
         <ul class="notifications">
             <%
-            _.each(notifications,function(notification){
-            if(notification.type == 1)
+            _.each(notifications,function(notification)
+            {
+
+            if(notification.type === 1)
             { %>
-            <li><span class="highlight"><%= notification.gig.artist.name %></span> has Canceled the gig at <%= notification.gig.venue %> at <%= moment(notification.gig.dateTime).format("d MMM HH:ss") %></li>
+            <li>
+                <span class="highlight"><%= notification.gig.artist.name %></span> has Canceled the gig at <%= notification.gig.venue %> at <%= moment(notification.gig.dateTime).format("d MMM HH:ss") %>
+            </li>
             <% }
             else if(notification.type == 2)
             {
@@ -116,42 +120,42 @@
             %>
         </ul>
     </script>
-<script>
-    $(function() {
-        $.getJSON("/api/notifications", function(userNotifications) {
-            if (userNotifications.length !== 0) {
+    <script>
+        $(function () {
+            $.getJSON("/api/notifications", function (userNotifications) {
+                if (userNotifications.length !== 0) {
 
-                $(".js-notifications-count").text(userNotifications.length)
-                    .removeClass("hide")
-                    .addClass("animated bounceInDown");
-            }
+                    $(".js-notifications-count").text(userNotifications.length)
+                        .removeClass("hide")
+                        .addClass("animated bounceInDown");
+                }
 
-            $(".notifications").popover({
-                html: true,
-                title: "Notifications",
-                content: function() {
+                $(".notifications").popover({
+                    html: true,
+                    title: "Notifications",
+                    content: function () {
+                        if (userNotifications.length === 0)
+                            return "<p style=\"padding:10px;color:#707070;\">No new notifications<p>";
+                        var compiled = _.template($("#notifications-template").html());
+                        return compiled({ notifications: userNotifications });
+                    },
+                    placement: "bottom",
+                    template: '<div class="popover popover-notification" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+
+                }).on("shown.bs.popover", function () {
                     if (userNotifications.length === 0)
-                        return "<p style=\"padding:10px;color:#707070;\">No new notifications<p>";
-                    var compiled = _.template($("#notifications-template").html());
-                    return compiled({ notifications: userNotifications });
-                },
-                placement: "bottom",
-                template: '<div class="popover popover-notification" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
-
-            }).on("shown.bs.popover", function() {
-                if (userNotifications.length === 0)
-                    return;
-                $.post("/api/notifications/markAsRead").done(function() {
-                    $(".js-notifications-count").text("").addClass("hide");
+                        return;
+                    $.post("/api/notifications/markAsRead").done(function () {
+                        $(".js-notifications-count").text("").addClass("hide");
+                    });
                 });
+
             });
 
+            $(".btn-create-gig").click(function () {
+                $("#gigCreateForm").submit();
+            });
         });
-
-        $(".btn-create-gig").click(function() {
-            $("#gigCreateForm").submit();
-        });
-    });
-</script>
+    </script>
 </body>
 </html>

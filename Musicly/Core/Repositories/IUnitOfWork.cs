@@ -6,6 +6,6 @@
         IAttendanceRepository Attendances { get; }
         IFollowingRepository Followings { get; }
         IArtistRepository Artists { get; }
-        void Complete();
+        void SaveWork();
     }
 }

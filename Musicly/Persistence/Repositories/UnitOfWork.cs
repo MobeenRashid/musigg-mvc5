@@ -20,7 +20,7 @@ namespace Musicly.Persistence.Repositories
             Artists =new ArtistRepository(_dbContext);
         }
 
-        public void Complete()
+        public void SaveWork()
         {
             _dbContext.SaveChanges();
         }

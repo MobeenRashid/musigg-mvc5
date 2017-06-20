@@ -7,35 +7,46 @@ using Microsoft.AspNet.Identity;
 using Musicly.Core.Models;
 using Musicly.Core.ViewModel;
 using Musicly.Persistence;
+using Musicly.Core.Repositories;
+using System.Security.Principal;
 
 namespace Musicly.Controllers.APIs
 {
     [System.Web.Http.Authorize]
     public class GigsController : ApiController
     {
+        private readonly IUnitOfWork _unitOfWork;
+
         private readonly ApplicationDbContext _db;
 
-        public GigsController()
+        public GigsController(IUnitOfWork unitOfWork)
         {
+            _unitOfWork = unitOfWork;
             _db = new ApplicationDbContext();
         }
         
-        [System.Web.Http.HttpDelete]
+        [HttpDelete]
         public IHttpActionResult Cancel(int id)
         {
             var userId = User.Identity.GetUserId();
-            var gig = _db.Gigs.Include(g => g.Attendances.Select(a => a.Artist)).Single(g => g.Id == id && g.ArtistId == userId);
+            var gig = _unitOfWork.Gigs.GetGigWithAttandees(id);
+
+            if (gig == null)
+                return NotFound();
 
             if (gig.IsCancel)
                 return NotFound();
 
+            if (gig.ArtistId != userId)
+                return Unauthorized();
+
             gig.Cancel();
 
-            _db.SaveChanges();
+            _unitOfWork.SaveWork();
             return Ok();
         }
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public HttpResponseMessage Create(GigFormViewModel viewModel)
         {
             if (!ModelState.IsValid)

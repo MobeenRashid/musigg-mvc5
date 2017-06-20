@@ -56,7 +56,7 @@ namespace Musicly.Core.Models
 
         public void Modify(DateTime date, string venue, int genre,string description)
         {
-            var notification = Notification.GigUpdated(this, date, venue);
+            var notification = Notification.GigUpdated(this, this.DateTime, this.Venue);
 
             Venue = venue;
             Description = description;

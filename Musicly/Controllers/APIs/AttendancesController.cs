@@ -47,7 +47,7 @@ namespace Musicly.Controllers.APIs
             };
 
             _unitOfWork.Attendances.AddAttendance(attendance);
-            _unitOfWork.Complete();
+            _unitOfWork.SaveWork();
 
             return Ok();
         }
@@ -60,7 +60,7 @@ namespace Musicly.Controllers.APIs
 
             if (_unitOfWork.Attendances.RemoveAttendance(dto.GigId, userId))
             {
-                _unitOfWork.Complete();
+                _unitOfWork.SaveWork();
                 return Ok();
             }
 
