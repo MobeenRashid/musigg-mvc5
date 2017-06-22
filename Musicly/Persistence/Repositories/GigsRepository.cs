@@ -9,9 +9,9 @@ namespace Musicly.Persistence.Repositories
 {
     public class GigsRepository : IGigsRepository
     {
-        private readonly ApplicationDbContext _db;
+        private readonly IApplicationDbContext _db;
 
-        public GigsRepository(ApplicationDbContext db)
+        public GigsRepository(IApplicationDbContext db)
         {
             _db = db;
         }
@@ -72,6 +72,11 @@ namespace Musicly.Persistence.Repositories
         public IEnumerable<Gig> GetFutureGigs()
         {
             return _db.Gigs.Where(g => g.DateTime > DateTime.Now).Include(g => g.Genre).Include(g => g.Artist).ToList();
+        }
+
+        public IEnumerable<Gig> GetUpcomingGigsByArtist(string artisId)
+        {
+            return _db.Gigs.Where(g => g.ArtistId == artisId && g.DateTime > DateTime.Today && !g.IsCancel).ToList();
         }
     }
 }

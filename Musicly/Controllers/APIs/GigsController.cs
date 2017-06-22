@@ -31,12 +31,9 @@ namespace Musicly.Controllers.APIs
             var userId = User.Identity.GetUserId();
             var gig = _unitOfWork.Gigs.GetGigWithAttandees(id);
 
-            if (gig == null)
+            if (gig == null || gig.IsCancel)
                 return NotFound();
-
-            if (gig.IsCancel)
-                return NotFound();
-
+            
             if (gig.ArtistId != userId)
                 return Unauthorized();
 

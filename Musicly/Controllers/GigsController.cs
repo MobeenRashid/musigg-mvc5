@@ -6,16 +6,18 @@ using Musicly.Core.Models;
 using Musicly.Core.ViewModel;
 using Musicly.Persistence;
 using Musicly.Persistence.Repositories;
+using Musicly.Core.Repositories;
 
 namespace Musicly.Controllers
 {
     public class GigsController : Controller
     {
-        private readonly UnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GigsController()
+        public GigsController(IUnitOfWork unitofWork)
         {
-            _unitOfWork = new UnitOfWork(new ApplicationDbContext());
+
+            _unitOfWork = unitofWork;
         }
 
         [Authorize]
@@ -29,6 +31,7 @@ namespace Musicly.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [RequireHttps]
         public ActionResult Update(GigFormViewModel viewModel)
         {
             if (!ModelState.IsValid)

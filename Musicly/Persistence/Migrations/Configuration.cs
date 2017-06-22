@@ -3,7 +3,7 @@ using Musicly.Core.Models;
 
 namespace Musicly.Persistence.Migrations
 {
-    internal sealed class Configuration : DbMigrationsConfiguration<ApplicationDbContext>
+    public sealed class Configuration : DbMigrationsConfiguration<ApplicationDbContext>
     {
         public Configuration()
         {

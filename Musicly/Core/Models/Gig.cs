@@ -23,10 +23,8 @@ namespace Musicly.Core.Models
         [ForeignKey("Artist")]
         public string ArtistId { get; set; }
 
-        [DataType(DataType.DateTime)]
         public DateTime DateTime { get; set; }
 
-        [DataType(DataType.DateTime)]
         public DateTime DateAdded { get; set; }
 
         [StringLength(500)]

@@ -16,6 +16,7 @@ namespace Musicly.Core.Repositories
         Gig GetGigOnIdWithGenre(int id);
         Gig GetGigOnIdWithArtist(int id);
         Gig GetGigOnIdWithArtistAndGenre(int id);
+        IEnumerable<Gig> GetUpcomingGigsByArtist(string artisId);
 
     }
 }

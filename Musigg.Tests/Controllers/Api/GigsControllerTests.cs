@@ -18,7 +18,9 @@ namespace Musigg.Tests.Controllers.Api
         private const string userId = "1";
         public GigsController _controller;
         private Mock<IGigsRepository> _mockRepository;
-        public GigsControllerTests()
+
+        [TestInitialize]
+        public void TestInitialize()
         {
              _mockRepository = new Mock<IGigsRepository>();
 
@@ -77,6 +79,19 @@ namespace Musigg.Tests.Controllers.Api
             _mockRepository.Setup(g => g.GetGigWithAttandees(1)).Returns(gig);
 
             var result = _controller.Cancel(1);
+            
+            gig.IsCancel.ShouldBeEquivalentTo<bool>(true);
+
+
+            foreach (var attandee in gig.Attendances)
+            {
+                //way 1 to test notifications added//
+                Assert.IsTrue(attandee.Artist.UserNotifications.Count > 0);
+
+                //way 2 with fluent assertion to check notifications added
+                attandee.Artist.ShouldRaisePropertyChangeFor<ApplicationUser>(u => u.UserNotifications);
+            }
+
             result.Should().BeOfType<OkResult>();
         }
     }
